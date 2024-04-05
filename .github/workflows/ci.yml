@@ -1,0 +1,23 @@
+name: slimjre container ci
+
+on:
+  push:
+    branches:
+      - main
+    pull_request:
+      branches:
+        - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: build OCI container image
+        run: |
+          docker build -t slimjre .
+          docker tag slimjre localhost/slimjre:latest
+
