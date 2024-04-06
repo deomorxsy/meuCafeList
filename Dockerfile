@@ -3,8 +3,6 @@ FROM alpine:3.18
 #ARG version=8.382.05.1
 ARG version=22.0.0.37
 
-RUN apk add --no-cache binutils
-
 #slim build with jlink to keep jre size at a minimum
 RUN wget -O /THIRD-PARTY-LICENSES-20200824.tar.gz https://corretto.aws/downloads/resources/licenses/alpine/THIRD-PARTY-LICENSES-20200824.tar.gz && \
     echo "82f3e50e71b2aee21321b2b33de372feed5befad6ef2196ddec92311bc09becb  /THIRD-PARTY-LICENSES-20200824.tar.gz" | sha256sum -c - && \
