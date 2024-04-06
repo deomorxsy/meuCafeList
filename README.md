@@ -1,6 +1,6 @@
 # meuCafeList
 
-A speedrun attempt to clone MAL anime and manga lists into a github pages subdomain, using SpringBoot. IaC automation provided by OCI containers, compose, github actions and scaffolding with shellscript.
+A speedrun attempt to clone [MAL](https://myanimelist.net/) lists into a github pages subdomain, using SpringBoot. IaC automation provided by OCI containers, compose, github actions and scaffolding with shellscript.
 
 ## Usage
 
@@ -18,9 +18,8 @@ mvn compile exec:java -Dexec.mainClass="com.meucafelist.app"
 
 4. **make up/down** to respectively run or stop the app.
 
-5.
 
 ## Scaffolding
 
-1. **make scaff** to run [skel.sh](./scripts/skel.sh) and generate the project skeleton directory structure:
+1. **make scaff** to run [setup.sh](./scripts/skel.sh) and generate the project skeleton directory structure:
 

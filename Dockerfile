@@ -1,7 +1,7 @@
 FROM alpine:3.18
 
 #ARG version=8.382.05.1
-ARG version=20.0.2.9.1
+ARG version=22.0.0.37.
 
 RUN apk add --no-cache binutils
 
@@ -14,12 +14,12 @@ RUN wget -O /THIRD-PARTY-LICENSES-20200824.tar.gz https://corretto.aws/downloads
     SHA_SUM="6cfdf08be09f32ca298e2d5bd4a359ee2b275765c09b56d514624bf831eafb91" && \
     echo "${SHA_SUM}  /etc/apk/keys/amazoncorretto.rsa.pub" | sha256sum -c - && \
     echo "https://apk.corretto.aws" >> /etc/apk/repositories && \
-    apk add --no-cache amazon-corretto-20=$version-r0 binutils maven && \
+    apk add --no-cache amazon-corretto-22=$version-r0 binutils maven && \
     /usr/lib/jvm/default-jvm/bin/jlink --add-modules "$(java --list-modules | sed -e 's/@[0-9].*$/,/' | tr -d \\n)" --no-man-pages --no-header-files --strip-debug --output /opt/corretto-slim && \
     apk del binutils amazon-corretto-20 && \
     mkdir -p /usr/lib/jvm/ && \
-    mv /opt/corretto-slim /usr/lib/jvm/java-20-amazon-corretto && \
-    ln -sfn /usr/lib/jvm/java-20-amazon-corretto /usr/lib/jvm/default-jvm
+    mv /opt/corretto-slim /usr/lib/jvm/java-22-amazon-corretto && \
+    ln -sfn /usr/lib/jvm/java-22-amazon-corretto /usr/lib/jvm/default-jvm
 
 ENV LANG C.UTF-8
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm
