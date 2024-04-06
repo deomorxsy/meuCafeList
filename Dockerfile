@@ -1,7 +1,7 @@
 FROM alpine:3.18
 
 #ARG version=8.382.05.1
-ARG version=22.0.0.37.
+ARG version=22.0.0.37
 
 RUN apk add --no-cache binutils
 
