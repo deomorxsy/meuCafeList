@@ -2,7 +2,7 @@
 
 mvn_skeleton() {
 mvn archetype:generate \
-	-DgroupId=com.meucafelist.app \
+	-DgroupId=com.mycafelist.app \
 	-DartifactId=server \
 	-DarchetypeArtifactId=maven-archetype-quickstart \
     -DarchetypeVersion=1.0 \
@@ -23,7 +23,11 @@ SPRING_PLUGIN=$(cat <<'EOF'
 EOF
 )
 
-# todo: fix it to the second ocurrence
-sed -i '/</artifactId>/a '"$SPRING_PLUGIN" ./pom.xml
+# match second ocurrence of pattern, append SPRING_PLUGIN. cheatsheet below
+# t = conditional branch;
+# a = append text
+# P = prints line from the pattern space until the first newline
+#
+sed -i "/</artifactId>/!b;:a;\$!N;s/</artifactId>/$SPRING_PLUGIN/2;ta;P;D" ./server/pom.xml
 
 }

@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  server:
+    restart: always
+    build:
+      context: ./
+      target: builder
+    command:
+    stop_signal: SIGINT
+  nginx:
+    image: nginx:alpine:1.25.4
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends-on:
+      - server
+volumes:
+  myapp_vol: {}

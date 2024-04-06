@@ -14,7 +14,7 @@ RUN wget -O /THIRD-PARTY-LICENSES-20200824.tar.gz https://corretto.aws/downloads
     SHA_SUM="6cfdf08be09f32ca298e2d5bd4a359ee2b275765c09b56d514624bf831eafb91" && \
     echo "${SHA_SUM}  /etc/apk/keys/amazoncorretto.rsa.pub" | sha256sum -c - && \
     echo "https://apk.corretto.aws" >> /etc/apk/repositories && \
-    apk add --no-cache amazon-corretto-20=$version-r0 binutils && \
+    apk add --no-cache amazon-corretto-20=$version-r0 binutils maven && \
     /usr/lib/jvm/default-jvm/bin/jlink --add-modules "$(java --list-modules | sed -e 's/@[0-9].*$/,/' | tr -d \\n)" --no-man-pages --no-header-files --strip-debug --output /opt/corretto-slim && \
     apk del binutils amazon-corretto-20 && \
     mkdir -p /usr/lib/jvm/ && \
@@ -31,10 +31,10 @@ RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER && \
     chown -R $APPLICATION_USER /app
 USER 1000
 
-COPY --chown=1000:1000 ./jit/sample/jdk-8281677.java /app/jdk-8281677.java
+COPY --chown=1000:1000 ./server/src/main/java/com/meucafelist/app/App.java /app/mcl.java
 WORKDIR /app
 
 EXPOSE 8080
-ENTRYPOINT [ "/usr/lib/jvm/default-jvm/bin/java", "/app/jdk-8281677.java" ]
+ENTRYPOINT [ "/usr/lib/jvm/default-jvm/bin/java", "/app/mcl.java" ]
 #ENTRYPOINT/CMD [ "/jre/bin/java", "-jar", "/app/app.jar" ]
 
