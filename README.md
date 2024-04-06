@@ -2,6 +2,12 @@
 
 A speedrun attempt to clone [MAL](https://myanimelist.net/) lists into a github pages subdomain, using SpringBoot. IaC automation provided by OCI containers, compose, github actions and scaffolding with shellscript.
 
+The second attempt is to make the app ~**blazingly**~ fast by having a slim container image build, featuring:
+- alpine as OCI container distro;
+- [amazon-corretto-22]() as JRE;
+- symbol stripping with [jlink]();
+- to avoid layer bloat, ~only one~ two are being used to download and remove build dependencies. Dockerfile inspired by the official [corretto](https://github.com/corretto/corretto-docker/) repo
+
 ## Usage
 
 1. clone repository with SSH and enter directory

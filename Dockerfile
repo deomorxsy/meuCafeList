@@ -1,7 +1,9 @@
 FROM alpine:3.18
 
 #ARG version=8.382.05.1
-ARG version=22.0.0.37
+#ARG version=22.0.0.37.1; builds, no maven
+ARG version=21.0.2.14.1
+# works with maven
 
 #slim build with jlink to keep jre size at a minimum
 RUN wget -O /THIRD-PARTY-LICENSES-20200824.tar.gz https://corretto.aws/downloads/resources/licenses/alpine/THIRD-PARTY-LICENSES-20200824.tar.gz && \
@@ -12,16 +14,30 @@ RUN wget -O /THIRD-PARTY-LICENSES-20200824.tar.gz https://corretto.aws/downloads
     SHA_SUM="6cfdf08be09f32ca298e2d5bd4a359ee2b275765c09b56d514624bf831eafb91" && \
     echo "${SHA_SUM}  /etc/apk/keys/amazoncorretto.rsa.pub" | sha256sum -c - && \
     echo "https://apk.corretto.aws" >> /etc/apk/repositories && \
-    apk add --no-cache amazon-corretto-22=$version-r0 binutils maven && \
+    apk add --no-cache amazon-corretto-21=$version-r0 binutils && \
     /usr/lib/jvm/default-jvm/bin/jlink --add-modules "$(java --list-modules | sed -e 's/@[0-9].*$/,/' | tr -d \\n)" --no-man-pages --no-header-files --strip-debug --output /opt/corretto-slim && \
-    apk del binutils amazon-corretto-20 && \
+    apk del binutils amazon-corretto-21 && \
     mkdir -p /usr/lib/jvm/ && \
-    mv /opt/corretto-slim /usr/lib/jvm/java-22-amazon-corretto && \
-    ln -sfn /usr/lib/jvm/java-22-amazon-corretto /usr/lib/jvm/default-jvm
+    mv /opt/corretto-slim /usr/lib/jvm/java-21-amazon-corretto && \
+    ln -sfn /usr/lib/jvm/java-21-amazon-corretto /usr/lib/jvm/default-jvm
+
 
 ENV LANG C.UTF-8
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm
+#ENV JAVA_HOME="$(/usr/libexec/java_home -v 21)"
 ENV PATH=$PATH:/usr/lib/jvm/default-jvm/bin
+
+# ====== maven setup, new layer ======
+ENV MAVEN_VERSION 3.9.2
+ENV MAVEN_HOME /usr/lib/mvn
+ENV PATH $MAVEN_HOME/bin:$PATH
+
+RUN wget http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+  tar -zxvf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+  rm apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+  mv apache-maven-$MAVEN_VERSION /usr/lib/mvn
+
+# ====================
 
 ARG APPLICATION_USER=appuser
 RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER && \
