@@ -49,6 +49,9 @@ COPY --chown=1000:1000 ./server/src/main/java/com/meucafelist/app/App.java /app/
 WORKDIR /app
 
 EXPOSE 8080
-ENTRYPOINT [ "/usr/lib/jvm/default-jvm/bin/java", "/app/mcl.java" ]
 #ENTRYPOINT/CMD [ "/jre/bin/java", "-jar", "/app/app.jar" ]
+ENTRYPOINT [ "/usr/lib/jvm/default-jvm/bin/java", "/app/mcl.java" ]
+#ENTRYPOINT [ "mvn", "compile" "exec:java", "-Dexec.mainClass=", "com.meucafelist.app", "-f", "./server/pom.xml", "-e"]
+
+
 

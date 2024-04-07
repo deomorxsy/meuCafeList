@@ -1,8 +1,8 @@
 #!/bin/bash
 
 mvn_skeleton() {
-mvn archetype:generate \
-	-DgroupId=com.mycafelist.app \
+mvn -q archetype:generate \
+	-DgroupId=com.meucafelist.app \
 	-DartifactId=server \
 	-DarchetypeArtifactId=maven-archetype-quickstart \
     -DarchetypeVersion=1.0 \
@@ -11,23 +11,65 @@ mvn archetype:generate \
 
 spring_setup() {
 
-SPRING_PLUGIN=$(cat <<'EOF'
-<build> \
-    <plugins> \
-        <plugin> \
-            <groupId>org.springframework.boot</groupId> \
-            <artifactId>spring-boot-maven-plugin</artifactId> \
-        </plugin> \
-    </plugins> \
-</build>
+SPRING_DEPENDENCIES=$(cat << 'EOF'
+    <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter</artifactId>
+        <version>3.1.5</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-test</artifactId>
+		<scope>test</scope>
+	</dependency>
 EOF
 )
 
-# match second ocurrence of pattern, append SPRING_PLUGIN. cheatsheet below
-# t = conditional branch;
-# a = append text
-# P = prints line from the pattern space until the first newline
-#
-sed -i "/</artifactId>/!b;:a;\$!N;s/</artifactId>/$SPRING_PLUGIN/2;ta;P;D" ./server/pom.xml
+SPRING_PARENT=$(cat <<'EOF'
+  <parent>  \
+    <groupId>org.springframework.boot</groupId> \
+	<artifactId>spring-boot-starter-parent</artifactId> \
+	<version>3.2.4</version> \
+	<relativePath/> <!-- lookup parent from repository --> \
+  </parent>
+EOF
+)
+
+SPRING_PLUGIN=$(cat <<'EOF'
+    <build> \
+        <plugins> \
+                <plugin> \
+                    <groupId>org.springframework.boot</groupId> \
+                    <artifactId>spring-boot-maven-plugin</artifactId> \
+            </plugin> \
+        </plugins> \
+    </build> \
+    <properties> \
+     <maven.compiler.source>1.8</maven.compiler.source> \
+     <maven.compiler.target>1.8</maven.compiler.target> \
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> \
+     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> \
+    </properties>
+EOF
+)
+
+# first set the range of patterns,
+# group the commands with {}
+# append multi-line indented string after pattern
+sed -i "/<project/,/<\/project>/ {
+/<\/dependencies>/a\
+$SPRING_PLUGIN
+}" ./server/pom.xml
+
+sed -i "/<project/,/<\/project>/ {
+/<\/modelVersion>/a\
+$SPRING_PARENT
+}" ./server/pom.xml
+
+sed -i "/<project/,/<\/project>/ {
+/\<dependencies>/a\
+$SPRING_DEPENDENCIES
+}" ./server/pom.xml
 
 }

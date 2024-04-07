@@ -1,10 +1,13 @@
 SHELL=/bin/bash
 
-skeleton=$( shell source ./scripts/setup.sh; mvn_skeleton )
-spring=$( shell source ./scripts/setup.sh; spring_setup )
+skeleton=$(shell source ./scripts/setup.sh; mvn_skeleton)
+spring=$(shell source ./scripts/setup.sh; spring_setup)
 
 test:
 	docker compose -f ./compose.yml run
+
+local:
+	mvn compile exec:java -Dexec.mainClass="com.meucafelist.app" -f ./server/pom.xml -ev
 
 up:
 	docker compose -f ./compose.yml up
