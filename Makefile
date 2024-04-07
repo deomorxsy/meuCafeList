@@ -7,7 +7,9 @@ test:
 	docker compose -f ./compose.yml run
 
 local:
-	mvn compile exec:java -Dexec.mainClass="com.meucafelist.app" -f ./server/pom.xml -ev
+	mvn install -f ./server/pom.xml
+	mvn compile exec:java -Dexec.mainClass="com.meucafelist.app.App" -f ./server/pom.xml -e
+
 
 up:
 	docker compose -f ./compose.yml up

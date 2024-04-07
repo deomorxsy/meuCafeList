@@ -12,16 +12,15 @@ mvn -q archetype:generate \
 spring_setup() {
 
 SPRING_DEPENDENCIES=$(cat << 'EOF'
-    <dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter</artifactId>
-        <version>3.1.5</version>
-	</dependency>
-
-	<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-test</artifactId>
-		<scope>test</scope>
+    <dependency> \
+		<groupId>org.springframework.boot</groupId> \
+		<artifactId>spring-boot-starter</artifactId> \
+        <version>3.1.5</version> \
+	</dependency> \
+	<dependency> \
+		<groupId>org.springframework.boot</groupId> \
+		<artifactId>spring-boot-starter-test</artifactId> \
+		<scope>test</scope> \
 	</dependency>
 EOF
 )
@@ -68,7 +67,7 @@ $SPRING_PARENT
 }" ./server/pom.xml
 
 sed -i "/<project/,/<\/project>/ {
-/\<dependencies>/a\
+/<dependencies>/a\
 $SPRING_DEPENDENCIES
 }" ./server/pom.xml
 
