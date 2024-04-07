@@ -2,6 +2,7 @@ SHELL=/bin/bash
 
 skeleton=$(shell source ./scripts/setup.sh; mvn_skeleton)
 spring=$(shell source ./scripts/setup.sh; spring_setup)
+compose=$(shell source ./scripts/ccr.sh; call checker)
 
 test:
 	docker compose -f ./compose.yml run
@@ -12,12 +13,15 @@ local:
 
 
 up:
+	@$(call compose)
 	docker compose -f ./compose.yml up
 
 down:
+	@$(call compose)
 	docker compose -f ./compose.yml down
 
 build:
+	@$(call compose)
 	docker compose -f ./compose.yml build
 
 scaff:
