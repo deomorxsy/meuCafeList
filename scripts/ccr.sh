@@ -4,12 +4,16 @@
 #
 
 checker() {
-    # bash square bracket eval to check for empty expanded variable in a string, AND if the podman binary have a path.
-    if (which podman 2>&1 | grep -o "no" | head -n 1  == 'no'); then
+    exists_wgh=$(which podman 2>&1 | grep -o "no" | head -n 1)
+    exists_command=$(command -v podman &>/dev/null)
+
+    # bash square bracket eval to check for empty expanded variable in a string,
+    # AND if the podman binary have a path.
+    if [ "$exists_wgh" == 'no' ]; then
         echo 'Using default DOCKER_HOST...'
         return
     # if true, command with the v flag outputs a line.
-    elif command -v podman &>/dev/null; then
+    elif $exists_command; then
         echo 'Podman found. Invoking podman_compose...'
         # hook to set podman service (systemd socket unit file) as DOCKER_HOST
         podman_compose

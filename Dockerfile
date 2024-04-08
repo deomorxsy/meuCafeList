@@ -45,13 +45,13 @@ RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER && \
     chown -R $APPLICATION_USER /app
 USER 1000
 
-COPY --chown=1000:1000 ./server/src/main/java/com/meucafelist/app/App.java /app/mcl.java
+COPY --chown=1000:1000 ./server/src/main/java/com/meucafelist/app/App.java /app/App.java
 WORKDIR /app
 
 EXPOSE 8080
 #ENTRYPOINT/CMD [ "/jre/bin/java", "-jar", "/app/app.jar" ]
 ENTRYPOINT [ "/usr/lib/jvm/default-jvm/bin/java", "/app/mcl.java" ]
-#ENTRYPOINT [ "mvn", "compile" "exec:java", "-Dexec.mainClass=", "com.meucafelist.app", "-f", "./server/pom.xml", "-e"]
+##ENTRYPOINT [ "mvn", "compile" "exec:java", "-Dexec.mainClass=", "com.meucafelist.app", "-f", "./server/pom.xml", "-e"]
 
 
 

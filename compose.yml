@@ -1,5 +1,8 @@
 version: "3.8"
 services:
+  #
+  # backend server
+  #
   server:
     restart: always
     build:
@@ -7,13 +10,39 @@ services:
       target: builder
     command:
     stop_signal: SIGINT
+  #
+  # ...nginx
+  #
   nginx:
-    image: nginx:alpine:1.25.4
+    image: nginx:1.25.4-alpine
     ports:
       - "8080:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-    depends-on:
-      - server
+  #
+  # frontend server
+  #
+  client:
+    build:
+      context: ./client
+      target: builder
+    command: bash -c "cd app/yew-ui && trunk serve --address 0.0.0.0 --port ${TRUNK_SERVE_PORT:-80}"
+    environment:
+      - SPRING_PORT=${SPRING_PORT:-8080}
+      - TRUNK_SERVE_PORT=${TRUNK_SERVE_PORT:-80}
+      - TRUNK_SERVE_HOST=localhost
+    ports:
+      - "${TRUNK_SERVE_PORT:-80}:${TRUNK_SERVE_PORT:-80}"
+    volumes:
+      - type: bind
+        source: ../
+        target: /app
+      - yew-ui-target-cache:/app/yew-ui/target
+      - yew-ui-cargo-registry-cache:/usr/local/cargo/registry
+    depends_on:
+      - nginx
+    stop_signal: SIGINT
+
 volumes:
-  myapp_vol: {}
+  yew-ui-target-cache:
+  yew-ui-cargo-registry-cache:
