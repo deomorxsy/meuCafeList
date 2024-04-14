@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM alpine:3.18 as base
 
 #ARG version=8.382.05.1
 #ARG version=22.0.0.37.1; builds, no maven
@@ -20,6 +20,8 @@ RUN wget -O /THIRD-PARTY-LICENSES-20200824.tar.gz https://corretto.aws/downloads
     mkdir -p /usr/lib/jvm/ && \
     mv /opt/corretto-slim /usr/lib/jvm/java-21-amazon-corretto && \
     ln -sfn /usr/lib/jvm/java-21-amazon-corretto /usr/lib/jvm/default-jvm
+    # && \
+    #chown 1000:1000
 
 
 ENV LANG C.UTF-8
@@ -27,30 +29,59 @@ ENV JAVA_HOME=/usr/lib/jvm/default-jvm
 #ENV JAVA_HOME="$(/usr/libexec/java_home -v 21)"
 ENV PATH=$PATH:/usr/lib/jvm/default-jvm/bin
 
+#ARG APPLICATION_USER=appuser
+#RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER && \
+#    mkdir /app && \
+#    chown -R $APPLICATION_USER /app
+
 # ====== maven setup, new layer ======
+
+FROM base as build
+
 ENV MAVEN_VERSION 3.9.2
 ENV MAVEN_HOME /usr/lib/mvn
-ENV PATH $MAVEN_HOME/bin:$PATH
+#ENV PATH $MAVEN_HOME/bin:$PATH
+ENV PATH=$PATH:$MAVEN_HOME/bin:$PATH
+
+ARG APPLICATION_USER=appuser
+RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER && \
+    mkdir -p /app && \
+    chown -R $APPLICATION_USER /app
+
+WORKDIR /app
+
+COPY . .
 
 RUN wget http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
   tar -zxvf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
   rm apache-maven-$MAVEN_VERSION-bin.tar.gz && \
-  mv apache-maven-$MAVEN_VERSION /usr/lib/mvn
+  mv apache-maven-$MAVEN_VERSION /usr/lib/mvn && \
+  mvn validate && mvn compile exec:java -Dexec.mainClass="com.meucafelist.app.App" && \
+  mvn test && \
+  mvn package -f .
 
 # ====================
+#
+# take from where the first stopped
+FROM base as relay
 
 ARG APPLICATION_USER=appuser
 RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER && \
-    mkdir /app && \
+    mkdir -p /app && \
     chown -R $APPLICATION_USER /app
+
 USER 1000
 
-COPY --chown=1000:1000 ./server/src/main/java/com/meucafelist/app/App.java /app/App.java
+#COPY --from=build --chown=1000:1000 ./server/src/main/java/com/meucafelist/app/App.java /app/App.java
+# the name of the snapshot is defined in the pom.xml
+COPY --from=build --chown=1000:1000 /app/target/server-1.0-SNAPSHOT.jar /app/App.jar
+#COPY --from=build /app/target/server-1.0-SNAPSHOT.jar /app/App.jar
 WORKDIR /app
 
 EXPOSE 8080
 #ENTRYPOINT/CMD [ "/jre/bin/java", "-jar", "/app/app.jar" ]
-ENTRYPOINT [ "/usr/lib/jvm/default-jvm/bin/java", "/app/mcl.java" ]
+ENTRYPOINT [ "/usr/lib/jvm/default-jvm/bin/java", "-jar", "/app/App.jar" ]
+#ENTRYPOINT [ "/usr/lib/jvm/default-jvm/bin/java", "/app/mcl.java" ]
 ##ENTRYPOINT [ "mvn", "compile" "exec:java", "-Dexec.mainClass=", "com.meucafelist.app", "-f", "./server/pom.xml", "-e"]
 
 

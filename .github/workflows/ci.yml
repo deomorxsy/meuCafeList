@@ -18,6 +18,9 @@ jobs:
 
       - name: build OCI container image
         run: |
-          docker build -t slimjre .
-          docker tag slimjre localhost/slimjre:latest
+          make build_server
+          make up_server
+          make clean
+          #docker build -t slimjre ./server/
+          #docker tag slimjre localhost/slimjre:latest
 

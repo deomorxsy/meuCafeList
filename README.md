@@ -19,7 +19,7 @@ cd ./meuCafeList/
 
 2. **make build** to build with:
 ```sh
-mvn compile exec:java -Dexec.mainClass="com.meucafelist.app"
+mvn compile exec:java -Dexec.mainClass="com.meucafelist.app.App"
 ```
 3. **make test** to test the app.
 

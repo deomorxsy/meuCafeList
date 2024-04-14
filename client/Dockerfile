@@ -11,7 +11,7 @@ COPY .env.docker .env
 #RUN apt-update && apt-get --yes install pkg-config libssl-dev \
 #cargo install trunk --version 0.16.0 \
 RUN apk update && apk install "pkgconf>2.2.0-r0" "openssl-dev>3.2.1-r1" \
-    wget -qO- https://github.com/trunk-rs/trunk/releases/download/0.17.10/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf- \
+    wget -qO- https://github.com/trunk-rs/trunk/releases/download/v0.19.1/trunk-aarch64-unknown-linux-musl.tar.gz | tar -xzf- \
     rustup target add wasm32-unknown-unknown \
     rustup component add rustfmt\
     rustup component add clippy-preview \
