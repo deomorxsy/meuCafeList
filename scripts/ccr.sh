@@ -35,7 +35,7 @@ fi
 # which triggers the podman service unit file. podman.service inherits the socket File Descriptor
 # and accept connection; this is an instance of a podman process in running state.
 curl -H "Content-Type: application/json" --unix-socket "$XDG_RUNTIME_DIR/podman/podman.sock" http://127.0.0.1/_ping
-
+printf "\n\n"
 # source this file before running docker compose
 ####
 

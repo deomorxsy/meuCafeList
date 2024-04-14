@@ -87,7 +87,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 name = "client"
 version = "0.1.0"
 dependencies = [
- "yew",
+ "yew 0.21.0 (git+https://github.com/yewstack/yew/)",
  "yew-router",
 ]
 
@@ -1155,7 +1155,31 @@ dependencies = [
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
- "yew-macro",
+ "yew-macro 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "yew"
+version = "0.21.0"
+source = "git+https://github.com/yewstack/yew/#e9739fc9ce4944ba93c77a32072551ab771a2cda"
+dependencies = [
+ "console_error_panic_hook",
+ "futures",
+ "gloo 0.10.0",
+ "implicit-clone",
+ "indexmap",
+ "js-sys",
+ "prokio",
+ "rustversion",
+ "serde",
+ "slab",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+ "yew-macro 0.21.0 (git+https://github.com/yewstack/yew/)",
 ]
 
 [[package]]
@@ -1165,6 +1189,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "02fd8ca5166d69e59f796500a2ce432ff751edecbbb308ca59fd3fe4d0343de2"
 dependencies = [
  "boolinator",
+ "once_cell",
+ "prettyplease",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.58",
+]
+
+[[package]]
+name = "yew-macro"
+version = "0.21.0"
+source = "git+https://github.com/yewstack/yew/#e9739fc9ce4944ba93c77a32072551ab771a2cda"
+dependencies = [
  "once_cell",
  "prettyplease",
  "proc-macro-error",
@@ -1188,7 +1225,7 @@ dependencies = [
  "urlencoding",
  "wasm-bindgen",
  "web-sys",
- "yew",
+ "yew 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "yew-router-macro",
 ]
 
