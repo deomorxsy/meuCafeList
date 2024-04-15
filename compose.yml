@@ -5,6 +5,7 @@ services:
   #
   server:
     #restart: always
+    #image: mcl_slimjre:v03
     build:
       context: ./server
       target: relay # release/artifact app stage
@@ -25,9 +26,10 @@ services:
   # frontend server
   #
   client:
+    #image: mcl_slimRust:v01
     build:
       context: ./client
-      target: relay # release/artifact app stage
+      target: relay # relay release/artifact app stage
       tags:
         - "yew_mcl:01"
     command: bash -c "cd app/yew-ui && trunk serve --address 0.0.0.0 --port ${TRUNK_SERVE_PORT:-80}"

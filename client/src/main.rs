@@ -1,9 +1,10 @@
 use yew::prelude::*;
-use yew_router::prelude::*;
+//use yew_router::prelude::*;
 
 // read at compile time
-//const ACTIX_PORT: &str = std::env!("ACTIX_PORT");
-const SPRING_PORT: &str = std::env!("SPRING_PORT");
+// const ACTIX_PORT: &str = std::env!("ACTIX_PORT");
+// const SPRING_PORT: &str = std::env::var("SPRING_PORT");
+// const SPRING_PORT: &str = std::env!("SPRING_PORT");
 
 #[function_component]
 fn App() -> Html {

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meuCafeList-deployment-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcl-app
+  template:
+    metadata:
+      labels:
+        app: mcl-app-spec-template
+    spec:
+      containers:
+      - name: sb_slimjre
+        image: sb_slimjre:v01
+        ports:
+        - containerPort: 8080
+
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+      - name: yew_mcl
+        image: yew_mcl:v01
+        ports:
+        - containerPort: 8081
